@@ -19,13 +19,13 @@ void runMutex() {
     mtx.lock();
     for(int i = 0; i < numIter; i++) {
         cout << generateRandom() << " ";
-        //this_thread::sleep_for(chrono::milliseconds(10));
+        
     }
     cout << endl;
     auto end = chrono::steady_clock::now();
     chrono::duration<double> elapsed = end - start;
-    mtx.unlock();
     cout << "Elapsed time: " << elapsed.count() << " seconds" << endl;
+    mtx.unlock();
 }
 
 template <typename T>

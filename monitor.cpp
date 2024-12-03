@@ -14,7 +14,7 @@ using namespace std;
 
 // Переменные для condition_variable и мьютекса
 condition_variable cv;
-mutex cv_mtx;
+mutex cvmtx;
 bool ready = false;
 
 // Функция, которая выполняет задачу потока, ожидая сигнала от condition_variable
@@ -22,8 +22,8 @@ void run() {
     auto start = chrono::steady_clock::now();
     
     // Захватываем мьютекс и ждем, пока ready не станет true
-    unique_lock<mutex> lock(cv_mtx); // для синхронизации доступа к переменной ready
-    cv.wait(lock, []{ return ready; });
+    unique_lock<mutex> lock(cvmtx); // для синхронизации доступа к переменной ready
+    cv.wait(lock, []{ return ready; });//Поток переходит в режим ожидания, освобождая мьютекс
   
     for (int i = 0; i < numIter; i++) {
         cout << generateRandom() << " ";
@@ -44,12 +44,12 @@ void primitive(T func) {
 
     this_thread::sleep_for(chrono::milliseconds(100));
 
-    // устанавливаем ready в true и уведомляем все потоки, чтобы они начали выполнение
+    //устанавливаем ready в true и уведомляем все потоки, чтобы они начали выполнение
     {
-        lock_guard<mutex> lock(cv_mtx);
+        lock_guard<mutex> lock(cvmtx);
         ready = true;
     }
-    cv.notify_all(); // уведомляем все потоки о том, что они могут начать выполнение
+    cv.notify_all(); //уведомляем все потоки о том, что они могут начать выполнение
 
     for (auto& th : threads) {
         th.join();

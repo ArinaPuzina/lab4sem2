@@ -23,8 +23,9 @@ void run() {
     cout << endl;
     auto end = chrono::steady_clock::now();
     chrono::duration<double> elapsed = end - start;
-    semaphore.release();
+    //semaphore.release();
     cout << "Elapsed time: " << elapsed.count() << " seconds" << endl;
+    semaphore.release();
 }
 
 template <typename T>

@@ -13,25 +13,25 @@
 using namespace std;
 
 // Барьер для синхронизации
-barrier sync_point(N);
+barrier point(N);
 
 // Мьютекс для синхронизации вывода
-mutex cout_mutex;
+mutex mtx;
 
 void run() {
     auto start = chrono::steady_clock::now();
 
     // Ожидание на барьере
-    sync_point.arrive_and_wait();
+    point.arrive_and_wait();
 
     vector<char> random_symbols;
     for (int i = 0; i < numIter; i++) {
         random_symbols.push_back(generateRandom());
     }
 
-    // Синхронизированный вывод
+    //Синхронизированный вывод
     {
-        lock_guard<mutex> lock(cout_mutex);
+        lock_guard<mutex> lock(mtx);
         for (auto num : random_symbols) {
             cout << num << " ";
         }
@@ -43,7 +43,7 @@ void run() {
 
     // Вывод времени выполнения
     {
-        lock_guard<std::mutex> lock(cout_mutex);
+        lock_guard<std::mutex> lock(mtx);
         cout << "Elapsed time: " << elapsed.count() << " seconds" << endl;
     }
 }
